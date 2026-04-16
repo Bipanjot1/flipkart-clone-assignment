@@ -27,13 +27,6 @@ const JWT_SECRET = "mysecretkey123";
 
 
 
-transporter.verify((error, success) => {
-  if (error) {
-    console.log("Mail transporter error:", error);
-  } else {
-    console.log("Mail server is ready");
-  }
-});
 
 /* ---------------- AUTH MIDDLEWARE ---------------- */
 
@@ -368,4 +361,8 @@ app.delete("/api/wishlist/:id", authMiddleware, async (req, res) => {
   }
 });
 
-app.listen(5000, () => console.log("Server running on port 5000"));
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
