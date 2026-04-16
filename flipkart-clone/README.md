@@ -23,8 +23,7 @@ A full-stack e-commerce web application inspired by Flipkart, built as an SDE In
 
   * Cart → Order Summary → Payment → Success
 * Order history page
-* User Authentication(Login/Signup)
-* Wishlist
+*
 
 ### Bonus Features
 
