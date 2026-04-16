@@ -1,5 +1,4 @@
 
-const nodemailer = require("nodemailer");
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
@@ -26,13 +25,7 @@ const pool = new Pool({
 
 const JWT_SECRET = "mysecretkey123";
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+
 
 transporter.verify((error, success) => {
   if (error) {
@@ -316,43 +309,7 @@ app.post("/api/orders", authMiddleware, async (req, res) => {
       [req.user.id]
     );
 
-    try {
-      const userResult = await pool.query(
-        "SELECT email, name FROM users WHERE id = $1",
-        [req.user.id]
-      );
-
-      const userEmail = userResult.rows[0]?.email;
-      const userName = userResult.rows[0]?.name || full_name;
-
-      console.log("Trying to send mail to:", userEmail);
-
-      if (userEmail) {
-        const info = await transporter.sendMail({
-          from: process.env.EMAIL_USER,
-          to: userEmail,
-          subject: "Order Placed Successfully - Flipkart Clone",
-          html: `
-            <div style="font-family: Arial, sans-serif; padding: 20px;">
-              <h2 style="color:#2874f0;">Order Confirmed</h2>
-              <p>Hi ${userName},</p>
-              <p>Your order has been placed successfully.</p>
-              <p><strong>Order Number:</strong> ${order_number}</p>
-              <p><strong>Total Amount:</strong> ₹${total_amount}</p>
-              <p><strong>Delivery Address:</strong><br/>
-              ${full_name}, ${address}, ${city}, ${state} - ${pincode}</p>
-              <p>Thank you for shopping with us.</p>
-            </div>
-          `,
-        });
-
-        console.log("Email sent:", info.response);
-      }
-    } catch (mailErr) {
-      console.error("Email sending failed:", mailErr);
-    }
-
-    res.json(order.rows[0]);
+        res.json(order.rows[0]);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
